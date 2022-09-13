@@ -4,7 +4,8 @@
   "description": "A monster battling game inspired by Pokemon; but food is more important.",
   "main": "app.js",
   "scripts": {
-    "ds": "nodemon server.js"
+    "ds": "nodemon server.js",
+    "production": "node server.js --port ${PORT-3000}"
   },
   "author": "Noxhpor",
   "license": "MIT",
