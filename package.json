@@ -1,0 +1,18 @@
+{
+  "name": "starvimon",
+  "version": "1.0.0",
+  "description": "A monster battling game inspired by Pokemon; but food is more important.",
+  "main": "app.js",
+  "scripts": {
+    "ds": "nodemon server.js"
+  },
+  "author": "Noxhpor",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
