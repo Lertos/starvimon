@@ -1,4 +1,5 @@
 class Sprite {
+
     constructor({ position, image, frames }) {
         this.position = position
         this.image = image
@@ -11,6 +12,12 @@ class Sprite {
             this.width = this.image.width / this.frames.maxX
             this.height = this.image.height / this.frames.maxY
         }
+
+        this.spriteRowForDirection = ['down', 'left', 'right', 'up']
+
+        this.moving = ''
+        this.lastDirection = ''
+        this.finishingMove = false
     }
 
     draw() {
@@ -25,16 +32,38 @@ class Sprite {
             this.width,
             this.height
         )
+
+        if (this.moving != '') {
+            if (this.lastDirection != this.moving)
+                this.lastDirection = this.moving
+        }
         
-        //Update the elapsed frames
+        if (this.moving == '') {
+            if (this.finishingMove) {
+                this.updateAnimation(true)
+            }
+            return
+        }
+
+        this.updateAnimation(false)
+    }
+
+    updateAnimation(isFinishing) {
         if (this.frames.maxX > 1 || this.frames.maxY > 1)
             this.elapsedFrames++
 
         if (this.elapsedFrames % 8 == 0) {
+            this.frames.currY = this.spriteRowForDirection.indexOf(this.lastDirection)
+
             if (this.frames.currX < this.frames.maxX - 1)
                 this.frames.currX++
             else
                 this.frames.currX = 0
+
+            if (isFinishing) {
+                this.frames.currX = this.idleFrame
+                this.isFinishing = false
+            }
         }
     }
 

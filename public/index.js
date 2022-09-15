@@ -117,6 +117,8 @@ function animate(newTime) {
         foregroundSprite.draw()
 
         moveMap()
+
+        playerSprite.moving = moveDir
     }
 }
 
@@ -213,6 +215,8 @@ window.addEventListener('keydown', (e) => {
 })
 
 window.addEventListener('keyup', (e) => {
-    if (pressedKey == e.key)
+    if (pressedKey == e.key) {
         pressedKey = ''
+        playerSprite.finishingMove = true
+    }
 })
