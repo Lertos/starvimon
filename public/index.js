@@ -19,49 +19,68 @@ const startPixel = {
     y: (startTile.y * tileSize * -1)
 }
 
-const image = new Image()
-image.src = './img/maps/home_island.png'
+const bgImage = new Image()
+bgImage.src = './img/maps/home_island.png'
 
 const playerImage = new Image()
 playerImage.src = './img/characters/human1.png'
-
-image.onload = () => {
-    let scaledX = roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x)
-    let scaledY = roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
-
-    ctx.drawImage(image, scaledX, scaledY)
-
-    playerImage.onload = () => {
-        let scaledX = roundToTileSize((canvas.width / 2) / ctxScale.x)
-        let scaledY = roundToTileSize((canvas.height / 2) / ctxScale.y)
-
-        let sprite_width = 16
-        let sprite_height = 20
-
-        ctx.drawImage(playerImage, sprite_width * 1, sprite_height * 0, sprite_width, sprite_height, scaledX, scaledY, sprite_width, sprite_height)
-    }
-}
 
 function roundToTileSize(num) {
     return Math.ceil(num / tileSize) * tileSize;
 }
 
 class Sprite {
-    constructor({ position, image }) {
+    constructor({ position, image, frames }) {
         this.position = position
         this.image = image
+        this.frames = frames
     }
 
     draw() {
-        ctx.drawImage(image, this.position.x, this.position.y)
+        //ctx.drawImage(image, this.position.x, this.position.y)
+        let spriteWidth = this.image.width / this.frames.maxX
+        let spriteHeight = this.image.height / this.frames.maxY
+
+        ctx.drawImage(
+            this.image, 
+            spriteWidth * this.frames.currX, //Crop X
+            spriteHeight * this.frames.currY, //Crop Y
+            spriteWidth, //Crop Width
+            spriteHeight, //Crop Height
+            this.position.x, 
+            this.position.y, 
+            spriteWidth,
+            spriteHeight
+        )
     }
 
 }
 
-const backgroundImage = new Sprite({
+const backgroundSprite = new Sprite({
     position: {
         x: roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x),
         y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
+    },
+    image: bgImage,
+    frames: {
+        maxX: 1,
+        maxY: 1,
+        currX: 0,
+        currY: 0,
+    }
+})
+
+const playerSprite = new Sprite({
+    position: {
+        x: roundToTileSize((canvas.width / 2) / ctxScale.x),
+        y: roundToTileSize((canvas.height / 2) / ctxScale.y)
+    },
+    image: playerImage,
+    frames: {
+        maxX: 3,
+        maxY: 4,
+        currX: 1,
+        currY: 0,
     }
 })
 
@@ -73,17 +92,10 @@ let moveDir = ''
 function animate() {
     window.requestAnimationFrame(animate)
 
-    backgroundImage.draw()
-    
+    backgroundSprite.draw()
+    playerSprite.draw()
+
     moveMap()
-
-    let scaledX = roundToTileSize((canvas.width / 2) / ctxScale.x)
-    let scaledY = roundToTileSize((canvas.height / 2) / ctxScale.y)
-
-    let sprite_width = 16
-    let sprite_height = 20
-
-    ctx.drawImage(playerImage, sprite_width * 1, sprite_height * 0, sprite_width, sprite_height, scaledX, scaledY, sprite_width, sprite_height)
 }
 
 animate()
@@ -121,25 +133,25 @@ function moveMap() {
     //There is movement taking place
     if (x != 0 || y != 0) {
         if (newMovement)
-            startingTile = { x: backgroundImage.position.x, y: backgroundImage.position.y }
+            startingTile = { x: backgroundSprite.position.x, y: backgroundSprite.position.y }
 
         if (x != 0) {
             destinationTile = { x: startingTile.x + (tileSize * x), y: startingTile.y }
             
-            if (Math.abs(destinationTile.x - backgroundImage.position.x) < moveSpeed) {
-                backgroundImage.position.x = destinationTile.x
+            if (Math.abs(destinationTile.x - backgroundSprite.position.x) < moveSpeed) {
+                backgroundSprite.position.x = destinationTile.x
                 moveDir = ''
             } else {
-                backgroundImage.position.x += (moveSpeed * x)
+                backgroundSprite.position.x += (moveSpeed * x)
             }
         } else if (y != 0) {
             destinationTile = { x: startingTile.x, y: startingTile.y + (tileSize * y) }
 
-            if (Math.abs(destinationTile.y - backgroundImage.position.y) < moveSpeed) {
-                backgroundImage.position.y = destinationTile.y
+            if (Math.abs(destinationTile.y - backgroundSprite.position.y) < moveSpeed) {
+                backgroundSprite.position.y = destinationTile.y
                 moveDir = ''
             } else {
-                backgroundImage.position.y += (moveSpeed * y)
+                backgroundSprite.position.y += (moveSpeed * y)
             }
         }
     }
