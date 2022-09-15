@@ -22,7 +22,6 @@ for (let i=0; i<colHomeIsland.length; i+=40) {
     mapCollisions.push(colHomeIsland.slice(i, 40 + i))
 }
 
-console.log(mapCollisions)
 
 const startPixel = {
     x: (startTile.x * tileSize * -1),
@@ -89,14 +88,36 @@ let startingTile = { x: 0, y: 0}
 let destinationTile = { x: 0, y: 0}
 let moveDir = ''
 
-function animate() {
+//Animation
+
+let fps, fpsInterval, startTime, now, then, elapsed
+
+startAnimating(60)
+
+function startAnimating(fps) {
+    fpsInterval = 1000 / fps
+    then = window.performance.now()
+    startTime = then
+    animate()
+}
+
+function animate(newTime) {
     window.requestAnimationFrame(animate)
 
-    backgroundSprite.draw()
-    playerSprite.draw()
-    foregroundSprite.draw()
+    //Calculate the time elapsed since last loop
+    now = newTime
+    elapsed = now - then
 
-    moveMap()
+    //If the next frame is ready, draw
+    if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval)
+        
+        backgroundSprite.draw()
+        playerSprite.draw()
+        foregroundSprite.draw()
+
+        moveMap()
+    }
 }
 
 animate()

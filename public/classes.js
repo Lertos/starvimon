@@ -4,6 +4,9 @@ class Sprite {
         this.image = image
         this.frames = frames
 
+        this.elapsedFrames = 0
+        this.idleFrame = frames.currX
+
         this.image.onload = () => {
             this.width = this.image.width / this.frames.maxX
             this.height = this.image.height / this.frames.maxY
@@ -22,6 +25,17 @@ class Sprite {
             this.width,
             this.height
         )
+        
+        //Update the elapsed frames
+        if (this.frames.maxX > 1 || this.frames.maxY > 1)
+            this.elapsedFrames++
+
+        if (this.elapsedFrames % 8 == 0) {
+            if (this.frames.currX < this.frames.maxX - 1)
+                this.frames.currX++
+            else
+                this.frames.currX = 0
+        }
     }
 
 }
