@@ -13,6 +13,16 @@ ctx.imageSmoothingEnabled = false
 
 const tileSize = 16
 const startTile = {x: 13, y: 19}
+let currentTile = startTile
+
+const mapCollisions = []
+
+//TODO: Change the i+ value to the amount of horz tiles from the Map object 
+for (let i=0; i<colHomeIsland.length; i+=40) {
+    mapCollisions.push(colHomeIsland.slice(i, 40 + i))
+}
+
+console.log(mapCollisions)
 
 const startPixel = {
     x: (startTile.x * tileSize * -1),
@@ -136,25 +146,49 @@ function moveMap() {
             startingTile = { x: backgroundSprite.position.x, y: backgroundSprite.position.y }
 
         if (x != 0) {
+            let possibleTile = { x: currentTile.x - x , y: currentTile.y }
+
+            if (isBlocked(possibleTile)) {
+                moveDir = ''
+                return
+            }
+
             destinationTile = { x: startingTile.x + (tileSize * x), y: startingTile.y }
-            
+
             if (Math.abs(destinationTile.x - backgroundSprite.position.x) < moveSpeed) {
                 backgroundSprite.position.x = destinationTile.x
                 moveDir = ''
+                currentTile.x -= x
             } else {
                 backgroundSprite.position.x += (moveSpeed * x)
             }
         } else if (y != 0) {
+            let possibleTile = { x: currentTile.x, y: currentTile.y - y }
+
+            if (isBlocked(possibleTile)) {
+                moveDir = ''
+                return
+            }
+
             destinationTile = { x: startingTile.x, y: startingTile.y + (tileSize * y) }
 
             if (Math.abs(destinationTile.y - backgroundSprite.position.y) < moveSpeed) {
                 backgroundSprite.position.y = destinationTile.y
                 moveDir = ''
+                currentTile.y -= y
             } else {
                 backgroundSprite.position.y += (moveSpeed * y)
             }
         }
     }
+}
+
+function isBlocked(tile) {
+    var tileType = mapCollisions[tile.y][tile.x]
+
+    if (tileType == 0)
+        return false
+    return true
 }
 
 window.addEventListener('keydown', (e) => {
