@@ -2,7 +2,7 @@
   "name": "starvimon",
   "version": "1.0.0",
   "description": "A monster battling game inspired by Pokemon; but food is more important.",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "ds": "nodemon server.js",
     "production": "node server.js --port ${PORT-3000}"

@@ -1,0 +1,9 @@
+
+* {
+    margin: 0;
+}
+
+canvas {
+    background-color: cadetblue;
+    image-rendering: pixelated;
+}
