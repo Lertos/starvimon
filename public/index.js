@@ -33,7 +33,10 @@ image.onload = () => {
         let scaledX = roundToTileSize((canvas.width / 2) / ctxScale.x)
         let scaledY = roundToTileSize((canvas.height / 2) / ctxScale.y)
 
-        ctx.drawImage(playerImage, scaledX, scaledY)
+        let sprite_width = 16
+        let sprite_height = 20
+
+        ctx.drawImage(playerImage, sprite_width * 1, sprite_height * 0, sprite_width, sprite_height, scaledX, scaledY, sprite_width, sprite_height)
     }
 }
 
