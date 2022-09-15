@@ -39,33 +39,6 @@ function roundToTileSize(num) {
     return Math.ceil(num / tileSize) * tileSize;
 }
 
-class Sprite {
-    constructor({ position, image, frames }) {
-        this.position = position
-        this.image = image
-        this.frames = frames
-    }
-
-    draw() {
-        //ctx.drawImage(image, this.position.x, this.position.y)
-        let spriteWidth = this.image.width / this.frames.maxX
-        let spriteHeight = this.image.height / this.frames.maxY
-
-        ctx.drawImage(
-            this.image, 
-            spriteWidth * this.frames.currX, //Crop X
-            spriteHeight * this.frames.currY, //Crop Y
-            spriteWidth, //Crop Width
-            spriteHeight, //Crop Height
-            this.position.x, 
-            this.position.y, 
-            spriteWidth,
-            spriteHeight
-        )
-    }
-
-}
-
 const backgroundSprite = new Sprite({
     position: {
         x: roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x),
