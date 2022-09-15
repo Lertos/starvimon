@@ -32,6 +32,9 @@ const startPixel = {
 const bgImage = new Image()
 bgImage.src = './img/maps/home_island.png'
 
+const fgImage = new Image()
+fgImage.src = './img/maps/home_island_fg.png'
+
 const playerImage = new Image()
 playerImage.src = './img/characters/human1.png'
 
@@ -45,6 +48,20 @@ const backgroundSprite = new Sprite({
         y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
     },
     image: bgImage,
+    frames: {
+        maxX: 1,
+        maxY: 1,
+        currX: 0,
+        currY: 0,
+    }
+})
+
+const foregroundSprite = new Sprite({
+    position: {
+        x: roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x),
+        y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
+    },
+    image: fgImage,
     frames: {
         maxX: 1,
         maxY: 1,
@@ -77,6 +94,7 @@ function animate() {
 
     backgroundSprite.draw()
     playerSprite.draw()
+    foregroundSprite.draw()
 
     moveMap()
 }
@@ -130,10 +148,12 @@ function moveMap() {
 
             if (Math.abs(destinationTile.x - backgroundSprite.position.x) < moveSpeed) {
                 backgroundSprite.position.x = destinationTile.x
+                foregroundSprite.position.x = destinationTile.x
                 moveDir = ''
                 currentTile.x -= x
             } else {
                 backgroundSprite.position.x += (moveSpeed * x)
+                foregroundSprite.position.x += (moveSpeed * x)
             }
         } else if (y != 0) {
             let possibleTile = { x: currentTile.x, y: currentTile.y - y }
@@ -147,10 +167,12 @@ function moveMap() {
 
             if (Math.abs(destinationTile.y - backgroundSprite.position.y) < moveSpeed) {
                 backgroundSprite.position.y = destinationTile.y
+                foregroundSprite.position.y = destinationTile.y
                 moveDir = ''
                 currentTile.y -= y
             } else {
                 backgroundSprite.position.y += (moveSpeed * y)
+                foregroundSprite.position.y += (moveSpeed * y)
             }
         }
     }
