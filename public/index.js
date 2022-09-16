@@ -22,6 +22,13 @@ for (let i=0; i<colHomeIsland.length; i+=40) {
     mapCollisions.push(colHomeIsland.slice(i, 40 + i))
 }
 
+const mapBattleZones = []
+
+//TODO: Change the i+ value to the amount of horz tiles from the Map object 
+for (let i=0; i<zonesHomeIsland.length; i+=40) {
+    mapBattleZones.push(zonesHomeIsland.slice(i, 40 + i))
+}
+
 
 const startPixel = {
     x: (startTile.x * tileSize * -1),
