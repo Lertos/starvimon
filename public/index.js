@@ -116,6 +116,8 @@ function animate(newTime) {
         playerSprite.draw()
         foregroundSprite.draw()
 
+        playerSprite.drawName()
+
         moveMap()
 
         playerSprite.moving = moveDir

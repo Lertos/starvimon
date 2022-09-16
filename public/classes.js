@@ -48,6 +48,20 @@ class Sprite {
         this.updateAnimation(false)
     }
 
+    drawName() {
+        let text = 'LERTOS'
+        ctx.font = 'bold 6px arial';
+        
+        let metrics = ctx.measureText(text);
+
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1.5;
+        ctx.strokeText(text, this.position.x - metrics.width / 2 + this.width / 2, this.position.y);
+        
+        ctx.fillStyle = 'white';
+        ctx.fillText(text, this.position.x - metrics.width / 2 + this.width / 2, this.position.y);
+    }
+
     updateAnimation(isFinishing) {
         if (this.frames.maxX > 1 || this.frames.maxY > 1)
             this.elapsedFrames++
