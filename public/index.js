@@ -101,7 +101,6 @@ let pressedKey = ''
 let startingTile = { x: 0, y: 0}
 let destinationTile = { x: 0, y: 0}
 let moveDir = ''
-let startBattleOnTile = false
 
 //Animation
 
@@ -173,50 +172,41 @@ function moveMap() {
         //Tile must be walkable. Set the destination tile
         destinationTile = { x: startingTile.x + (tileSize * x), y: startingTile.y + (tileSize * y) }
 
-        //Check if the destination tile will be a battle tile
-        //TODO: Preferably move this to its own function called "checkForBattle" that sets the battle flag if so
-        if (isTileType(possibleTile, mapBattleZones)) {
-            //TODO: Do some random number roll to see if a battle will occur
-            startBattleOnTile = true
+        let xMovement = Math.abs(destinationTile.x - backgroundSprite.position.x)
+        let yMovement = Math.abs(destinationTile.y - backgroundSprite.position.y)
+
+        //If the distance to travel is less then the movement speed, set them to the destination
+        if ((xMovement != 0 && xMovement < moveSpeed) || (yMovement != 0 && yMovement < moveSpeed)) {
+            xMovement = destinationTile.x
+            yMovement = destinationTile.y
+
+            onDestinationArrival(x, y)
+        } else {
+            xMovement = backgroundSprite.position.x + (moveSpeed * x)
+            yMovement = backgroundSprite.position.y + (moveSpeed * y)
         }
 
-        if (x != 0) {
-            if (Math.abs(destinationTile.x - backgroundSprite.position.x) < moveSpeed) {
-                //TODO: Move this to a function called "reached destination" 
-                setPositionOfMapLayers(destinationTile.x, 0)
-                moveDir = ''
-                currentTile.x -= x
+        setPositionOfMapLayers(xMovement, yMovement)
+    }
+}
 
-                if (startBattleOnTile) {
-                    console.log('BATTLE TIME')
-                }
+function onDestinationArrival(x, y) {
+    currentTile.x -= x
+    currentTile.y -= y
 
-            } else {
-                setPositionOfMapLayers(backgroundSprite.position.x + (moveSpeed * x), 0)
-            }
-        } else if (y != 0) {
-            if (Math.abs(destinationTile.y - backgroundSprite.position.y) < moveSpeed) {
-                setPositionOfMapLayers(0, destinationTile.y)
-                moveDir = ''
-                currentTile.y -= y
+    moveDir = ''
 
-                if (startBattleOnTile) {
-                    console.log('BATTLE TIME')
-                }
-            } else {
-                setPositionOfMapLayers(0, backgroundSprite.position.y + (moveSpeed * y))
-            }
-        }
+    if (isTileType(currentTile, mapBattleZones)) {
+        //TODO: Do some random number roll to see if a battle will occur
+        if (Math.random() < 0.25)
+            console.log('battle')
     }
 }
 
 function setPositionOfMapLayers(x, y) {
-    if (x != 0) {
-        for (i = 0; i < movingSprites.length; i++)
-            movingSprites[i].position.x = x
-    } else if (y != 0) {
-        for (i = 0; i < movingSprites.length; i++)
-            movingSprites[i].position.y = y
+    for (i = 0; i < movingSprites.length; i++) {
+        movingSprites[i].position.x = x
+        movingSprites[i].position.y = y
     }
 }
 
