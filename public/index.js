@@ -12,6 +12,7 @@ ctx.scale(ctxScale.x, ctxScale.y)
 ctx.imageSmoothingEnabled = false
 
 const tileSize = 16
+//TODO: This should come from the map; when logging in, entering a new map, etc
 const startTile = {x: 13, y: 19}
 let currentTile = startTile
 
@@ -92,6 +93,9 @@ const playerSprite = new Sprite({
         currY: 0,
     }
 })
+
+//Add any object that should be moved along with the map
+let movingSprites = [backgroundSprite, foregroundSprite]
 
 let pressedKey = ''
 let startingTile = { x: 0, y: 0}
@@ -186,14 +190,13 @@ function moveMap() {
     }
 }
 
-
 function setPositionOfMapLayers(x, y) {
     if (x != 0) {
-        backgroundSprite.position.x = x
-        foregroundSprite.position.x = x
+        for (i = 0; i < movingSprites.length; i++)
+            movingSprites[i].position.x = x
     } else if (y != 0) {
-        backgroundSprite.position.y = y
-        foregroundSprite.position.y = y
+        for (i = 0; i < movingSprites.length; i++)
+            movingSprites[i].position.y = y
     }
 }
 
