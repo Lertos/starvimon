@@ -1,9 +1,10 @@
 class Sprite {
 
-    constructor({ position, image, frames }) {
+    constructor({ position, image, offset, frames }) {
         this.position = position
         this.image = image
         this.frames = frames
+        this.offset = offset
 
         this.elapsedFrames = 0
         this.idleFrame = frames.currX
@@ -27,8 +28,8 @@ class Sprite {
             this.height * this.frames.currY, //Crop Y
             this.width, //Crop Width
             this.height, //Crop Height
-            this.position.x, 
-            this.position.y, 
+            this.position.x + this.offset.x, 
+            this.position.y + this.offset.y, 
             this.width,
             this.height
         )
@@ -50,23 +51,31 @@ class Sprite {
 
     drawName() {
         let text = 'LERTOS'
-        ctx.font = 'bold 6px arial';
+        ctx.font = 'bold 6px arial'
         
-        let metrics = ctx.measureText(text);
+        let metrics = ctx.measureText(text)
 
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 1.5;
-        ctx.strokeText(text, this.position.x - metrics.width / 2 + this.width / 2, this.position.y);
+        ctx.strokeStyle = 'black'
+        ctx.lineWidth = 1.5
+        ctx.strokeText(
+            text, 
+            this.position.x + this.offset.x - metrics.width / 2 + this.width / 2, 
+            this.position.y + this.offset.y
+        )
         
-        ctx.fillStyle = 'white';
-        ctx.fillText(text, this.position.x - metrics.width / 2 + this.width / 2, this.position.y);
+        ctx.fillStyle = 'white'
+        ctx.fillText(
+            text, 
+            this.position.x + this.offset.x - metrics.width / 2 + this.width / 2, 
+            this.position.y + this.offset.y
+        )
     }
 
     updateAnimation(isFinishing) {
         if (this.frames.maxX > 1 || this.frames.maxY > 1)
             this.elapsedFrames++
 
-        if (this.elapsedFrames % 8 == 0) {
+        if (this.elapsedFrames % 6 == 0) {
             this.frames.currY = this.spriteRowForDirection.indexOf(this.lastDirection)
 
             if (this.frames.currX < this.frames.maxX - 1)
