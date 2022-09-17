@@ -43,7 +43,7 @@ const fgImage = new Image()
 fgImage.src = './img/maps/home_island_fg.png'
 
 const playerImage = new Image()
-playerImage.src = './img/characters/human1.png'
+playerImage.src = './img/characters/human2.png'
 
 function roundToTileSize(num) {
     return Math.ceil(num / tileSize) * tileSize;
