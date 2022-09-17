@@ -54,6 +54,7 @@ const backgroundSprite = new Sprite({
         y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
     },
     image: bgImage,
+    offset: { x: 0, y: 0 },
     frames: {
         maxX: 1,
         maxY: 1,
@@ -68,6 +69,7 @@ const foregroundSprite = new Sprite({
         y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
     },
     image: fgImage,
+    offset: { x: 0, y: 0 },
     frames: {
         maxX: 1,
         maxY: 1,
@@ -82,6 +84,7 @@ const playerSprite = new Sprite({
         y: roundToTileSize((canvas.height / 2) / ctxScale.y)
     },
     image: playerImage,
+    offset: { x: 0, y: -4 },
     frames: {
         maxX: 3,
         maxY: 4,
