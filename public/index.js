@@ -101,6 +101,7 @@ let pressedKey = ''
 let startingTile = { x: 0, y: 0}
 let destinationTile = { x: 0, y: 0}
 let moveDir = ''
+let startBattleOnTile = false
 
 //Animation
 
@@ -163,18 +164,33 @@ function moveMap() {
 
         let possibleTile = { x: currentTile.x - x , y: currentTile.y - y }
 
-        if (isBlocked(possibleTile)) {
+        //Handle collision detection
+        if (isTileType(possibleTile, mapCollisions)) {
             moveDir = ''
             return
         }
 
+        //Tile must be walkable. Set the destination tile
         destinationTile = { x: startingTile.x + (tileSize * x), y: startingTile.y + (tileSize * y) }
+
+        //Check if the destination tile will be a battle tile
+        //TODO: Preferably move this to its own function called "checkForBattle" that sets the battle flag if so
+        if (isTileType(possibleTile, mapBattleZones)) {
+            //TODO: Do some random number roll to see if a battle will occur
+            startBattleOnTile = true
+        }
 
         if (x != 0) {
             if (Math.abs(destinationTile.x - backgroundSprite.position.x) < moveSpeed) {
+                //TODO: Move this to a function called "reached destination" 
                 setPositionOfMapLayers(destinationTile.x, 0)
                 moveDir = ''
                 currentTile.x -= x
+
+                if (startBattleOnTile) {
+                    console.log('BATTLE TIME')
+                }
+
             } else {
                 setPositionOfMapLayers(backgroundSprite.position.x + (moveSpeed * x), 0)
             }
@@ -183,6 +199,10 @@ function moveMap() {
                 setPositionOfMapLayers(0, destinationTile.y)
                 moveDir = ''
                 currentTile.y -= y
+
+                if (startBattleOnTile) {
+                    console.log('BATTLE TIME')
+                }
             } else {
                 setPositionOfMapLayers(0, backgroundSprite.position.y + (moveSpeed * y))
             }
@@ -229,10 +249,10 @@ function getDirectionValue() {
     return directions
 }
 
-function isBlocked(tile) {
-    var tileType = mapCollisions[tile.y][tile.x]
+function isTileType(tile, tileType) {
+    var tileValue = tileType[tile.y][tile.x]
 
-    if (tileType == 0)
+    if (tileValue == 0)
         return false
     return true
 }
