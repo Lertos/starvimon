@@ -7,3 +7,10 @@ canvas {
     background-color: cadetblue;
     image-rendering: pixelated;
 }
+
+.transitionDiv {
+    background-color: black;
+    position: absolute;
+    opacity: 50;
+    pointer-events: none; /* Ensures clicks can go through the div */
+}

@@ -178,8 +178,10 @@ class InstanceMap {
 
         if (this.isTileType(currentTile, this.mapBattleZones)) {
             //TODO: This should come from a map default such as "battle rate"
-            if (Math.random() < 0.25)
+            if (Math.random() < 0.25) {
+                battle.initiated = true
                 console.log('battle')
+            }
         }
     }
 
