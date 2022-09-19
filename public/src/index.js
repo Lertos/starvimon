@@ -1,7 +1,9 @@
 const tileSize = 16
 
 //TODO: Move to player class
-const moveSpeed = 1.2
+let walkSpeed = 1.2
+let runSpeed = 2
+let moveSpeed = walkSpeed
 
 //Load all images
 const imagePaths = {
@@ -148,12 +150,19 @@ function animate(newTime) {
 }
 
 window.addEventListener('keydown', (e) => {
-    if (pressedKey != e.key)
+    if (e.shiftKey) {
+        moveSpeed = runSpeed
+    }
+    else if (pressedKey != e.key) {
         pressedKey = e.key
+    }
 })
 
 window.addEventListener('keyup', (e) => {
-    if (pressedKey == e.key) {
+    if (e.shiftKey) {
+        moveSpeed = walkSpeed
+    }
+    else if (pressedKey == e.key) {
         pressedKey = ''
         playerSprite.finishingMove = true
     }

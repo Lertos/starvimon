@@ -157,7 +157,7 @@ class InstanceMap {
         let yMovement = Math.abs(destinationTile.y - this.bgImage.position.y)
 
         //If the distance to travel is less then the movement speed, set them to the destination
-        if ((xMovement != 0 && xMovement < moveSpeed) || (yMovement != 0 && yMovement < moveSpeed)) {
+        if ((xMovement != 0 && xMovement <= moveSpeed) || (yMovement != 0 && yMovement <= moveSpeed)) {
             xMovement = destinationTile.x
             yMovement = destinationTile.y
 
