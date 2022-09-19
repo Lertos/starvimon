@@ -1,37 +1,4 @@
-const canvas = document.querySelector('canvas')
-const leftTransitionDiv = document.querySelector('#leftTransitionDiv')
-const rightTransitionDiv = document.querySelector('#rightTransitionDiv')
-const ctx = canvas.getContext('2d')
-
-canvas.width = 1024
-canvas.height = 576
-
-leftTransitionDiv.style.width = 1024 / 2
-leftTransitionDiv.style.height = 576
-
-rightTransitionDiv.style.width = 0
-rightTransitionDiv.style.height = 576
-
-leftTransitionDiv.style.left = 1024 / 2 * -1
-rightTransitionDiv.style.left = 1024 
-
-gsap.to('#leftTransitionDiv', {
-    left: 0,
-    duration: 1.5,
-})
-
-gsap.to('#rightTransitionDiv', {
-    left: 1024 / 2,
-    width: 1024 / 2,
-    duration: 1.5,
-})
-
-
 const tileSize = 16
-const ctxScale = {x: 3, y: 3}
-
-ctx.scale(ctxScale.x, ctxScale.y)
-ctx.imageSmoothingEnabled = false
 
 //TODO: Move to player class
 const moveSpeed = 1.2
@@ -174,6 +141,7 @@ function animate(newTime) {
 
             playerSprite.moving = moveDir
         } else {
+            playBattleTransition()
             playerSprite.moving = ''
         }
     }

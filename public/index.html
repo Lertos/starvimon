@@ -10,8 +10,27 @@
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 
+    <script>
+        //Global setup that all files may need
+        const canvasWidth = 1024
+        const canvasHeight = 576
+
+        const canvas = document.querySelector('canvas')
+        const ctx = canvas.getContext('2d')
+
+        const ctxScale = {x: 3, y: 3}
+
+        canvas.width = canvasWidth
+        canvas.height = canvasHeight
+
+        ctx.scale(ctxScale.x, ctxScale.y)
+        ctx.imageSmoothingEnabled = false
+    </script>
+
     <script src='./collisions/map_battle_zones.js'></script>
     <script src='./collisions/map_collisions.js'></script>
-    <script src='./js/classes.js'></script>
-    <script src='./js/index.js'></script>
+    <script src='./src/classes.js'></script>
+    <script src='./src/battle.js'></script>
+    <script src='./src/index.js'></script>
+
 </html>

@@ -1,6 +1,7 @@
 
 * {
     margin: 0;
+    padding: 0;
 }
 
 canvas {
@@ -11,6 +12,5 @@ canvas {
 .transitionDiv {
     background-color: black;
     position: absolute;
-    opacity: 50;
     pointer-events: none; /* Ensures clicks can go through the div */
 }
