@@ -151,18 +151,18 @@ function animate(newTime) {
 
 window.addEventListener('keydown', (e) => {
     if (e.shiftKey) {
-        moveSpeed = runSpeed
+        if (moveSpeed == runSpeed)
+            moveSpeed = walkSpeed
+        else
+            moveSpeed = runSpeed
     }
-    else if (pressedKey != e.key) {
-        pressedKey = e.key
+    if (pressedKey.toLowerCase() != e.key.toLowerCase() && e.key != 'Shift') {
+        pressedKey = e.key.toLowerCase()
     }
 })
 
 window.addEventListener('keyup', (e) => {
-    if (e.shiftKey) {
-        moveSpeed = walkSpeed
-    }
-    else if (pressedKey == e.key) {
+    if (pressedKey.toLowerCase() == e.key.toLowerCase() && e.key != 'Shift') {
         pressedKey = ''
         playerSprite.finishingMove = true
     }
