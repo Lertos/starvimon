@@ -3,7 +3,6 @@ const tileSize = 16
 //TODO: Move to player class
 let walkSpeed = 1.2
 let runSpeed = 2
-let moveSpeed = walkSpeed
 
 //Load all images
 const imagePaths = {
@@ -27,8 +26,8 @@ for (const [key, value] of Object.entries(imagePaths)) {
     }
 }
 
+let player
 let currentMap
-let playerSprite
 
 let startTile = { x: 13, y: 19 }
 
@@ -36,9 +35,6 @@ let startPixel = {
     x: (startTile.x * tileSize * -1),
     y: (startTile.y * tileSize * -1)
 }
-
-//TODO: This is the players current tile
-let currentTile = startTile
 
 let pressedKey = ''
 let moveDir = ''
@@ -92,7 +88,7 @@ function startGame() {
         battleZones: zonesHomeIsland
     })
 
-    playerSprite = new Sprite({
+    let playerSprite = new Sprite({
         position: {
             x: roundToTileSize((canvas.width / 2) / ctxScale.x),
             y: roundToTileSize((canvas.height / 2) / ctxScale.y)
@@ -105,6 +101,12 @@ function startGame() {
             currX: 1,
             currY: 0,
         }
+    })
+
+    player = new Player({
+        sprite: playerSprite,
+        currentTile: startTile,
+        moveSpeed: walkSpeed
     })
 
     startAnimating(60)
@@ -133,28 +135,28 @@ function animate(newTime) {
         then = now - (elapsed % fpsInterval)
         
         currentMap.bgImage.draw()
-        playerSprite.draw()
+        player.sprite.draw()
         currentMap.fgImage.draw()
 
-        playerSprite.drawName()
+        player.sprite.drawName()
 
         if (!battle.initiated) {
             currentMap.moveMap()
 
-            playerSprite.moving = moveDir
+            player.sprite.moving = moveDir
         } else {
             playBattleTransition()
-            playerSprite.moving = ''
+            player.sprite.moving = ''
         }
     }
 }
 
 window.addEventListener('keydown', (e) => {
     if (e.shiftKey) {
-        if (moveSpeed == runSpeed)
-            moveSpeed = walkSpeed
+        if (player.moveSpeed == runSpeed)
+            player.moveSpeed = walkSpeed
         else
-            moveSpeed = runSpeed
+            player.moveSpeed = runSpeed
     }
     if (pressedKey.toLowerCase() != e.key.toLowerCase() && e.key != 'Shift') {
         pressedKey = e.key.toLowerCase()
@@ -164,6 +166,6 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
     if (pressedKey.toLowerCase() == e.key.toLowerCase() && e.key != 'Shift') {
         pressedKey = ''
-        playerSprite.finishingMove = true
+        player.sprite.finishingMove = true
     }
 })

@@ -137,7 +137,7 @@ class InstanceMap {
             if (newMovement)
                 startingTile = { x: this.bgImage.position.x, y: this.bgImage.position.y }
 
-            let possibleTile = { x: currentTile.x - x , y: currentTile.y - y }
+            let possibleTile = { x: player.currentTile.x - x , y: player.currentTile.y - y }
 
             //Handle collision detection
             if (this.isTileType(possibleTile, this.mapCollisions)) {
@@ -157,26 +157,26 @@ class InstanceMap {
         let yMovement = Math.abs(destinationTile.y - this.bgImage.position.y)
 
         //If the distance to travel is less then the movement speed, set them to the destination
-        if ((xMovement != 0 && xMovement <= moveSpeed) || (yMovement != 0 && yMovement <= moveSpeed)) {
+        if ((xMovement != 0 && xMovement <= player.moveSpeed) || (yMovement != 0 && yMovement <= player.moveSpeed)) {
             xMovement = destinationTile.x
             yMovement = destinationTile.y
 
             this.onDestinationArrival(x, y)
         } else {
-            xMovement = this.bgImage.position.x + (moveSpeed * x)
-            yMovement = this.bgImage.position.y + (moveSpeed * y)
+            xMovement = this.bgImage.position.x + (player.moveSpeed * x)
+            yMovement = this.bgImage.position.y + (player.moveSpeed * y)
         }
 
         this.setPositionOfMapLayers(xMovement, yMovement)
     }
 
     onDestinationArrival(x, y) {
-        currentTile.x -= x
-        currentTile.y -= y
+        player.currentTile.x -= x
+        player.currentTile.y -= y
 
         moveDir = ''
 
-        if (this.isTileType(currentTile, this.mapBattleZones)) {
+        if (this.isTileType(player.currentTile, this.mapBattleZones)) {
             //TODO: This should come from a map default such as "battle rate"
             if (Math.random() < 0.25) {
                 battle.initiated = true
@@ -227,6 +227,16 @@ class InstanceMap {
         }
     
         return directions
+    }
+
+}
+
+class Player {
+
+    constructor({ sprite, currentTile, moveSpeed }) {
+        this.sprite = sprite
+        this.currentTile = currentTile
+        this.moveSpeed = moveSpeed
     }
 
 }
