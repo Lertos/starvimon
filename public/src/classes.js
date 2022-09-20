@@ -81,7 +81,9 @@ class Sprite {
             else
                 this.frames.currX = 0
 
+            //Make sure when the animation is done, the sprite returns to the idle frame
             if (isFinishing) {
+                this.elapsedFrames =  0
                 this.frames.currX = this.idleFrame
                 this.isFinishing = false
             }
