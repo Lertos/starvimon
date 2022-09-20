@@ -1,6 +1,14 @@
+const SpriteType = {
+    Player: 'player',
+    NPC: 'npc',
+    Other: 'other'
+  }
+
+
 class Sprite {
 
-    constructor({ position, image, offset, frames }) {
+    constructor({ type, position, image, offset, frames }) {
+        this.type = type
         this.position = position
         this.image = image
         this.frames = frames
@@ -45,28 +53,6 @@ class Sprite {
         }
 
         this.updateAnimation(false)
-    }
-
-    drawName() {
-        let text = 'LERTOS'
-        ctx.font = 'bold 6px arial'
-        
-        let metrics = ctx.measureText(text)
-
-        ctx.strokeStyle = 'black'
-        ctx.lineWidth = 1.5
-        ctx.strokeText(
-            text, 
-            this.position.x + this.offset.x - metrics.width / 2 + this.width / 2, 
-            this.position.y + this.offset.y
-        )
-        
-        ctx.fillStyle = 'white'
-        ctx.fillText(
-            text, 
-            this.position.x + this.offset.x - metrics.width / 2 + this.width / 2, 
-            this.position.y + this.offset.y
-        )
     }
 
     updateAnimation(isFinishing) {
@@ -273,21 +259,20 @@ class NPC {
     }
 
     moveToDestination() {
-        if (this.positionChanges.length == 0)
+        if (this.getNextMovement() == -1)
             return
 
-        if (this.positionChanges[0].x == 0 && this.positionChanges[0].y == 0) {
-            this.positionChanges.shift()
-
-            if (this.positionChanges.length == 0)
-                return
-        }
-
         let positionChange = this.positionChanges[0]
+
         let x = Math.sign(positionChange.x)
         let y = Math.sign(positionChange.y)
 
-        //TODO: Cleanup
+        this.sprite.moving = this.getMoveDirection(x, y)
+
+        this.moveSprite(positionChange, x, y)
+    }
+
+    moveSprite(positionChange, x, y) {
         if (positionChange.x != 0) {
             if (Math.abs(positionChange.x) <= this.moveSpeed) {
                 this.sprite.position.x += positionChange.x
@@ -327,5 +312,34 @@ class NPC {
                 }
             }
         }
+    }
+
+    getNextMovement() {
+        if (this.positionChanges.length == 0) {
+            this.sprite.moving = ''
+            this.sprite.finishingMove = true
+            return -1
+        }
+
+        if (this.positionChanges[0].x == 0 && this.positionChanges[0].y == 0) {
+            this.positionChanges.shift()
+
+            if (this.positionChanges.length == 0) {
+                this.sprite.moving = ''
+                this.sprite.finishingMove = true
+                return -1
+            }
+        }
+    }
+
+    getMoveDirection(x, y) {
+        if (x > 0)
+            return 'right'
+        else if (x < 0)
+            return 'left'
+        else if (y > 0)
+            return 'down'
+        else if (y < 0)
+            return 'up'
     }
 }

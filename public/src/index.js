@@ -1,6 +1,5 @@
 const tileSize = 16
 
-//TODO: Move to player class
 let walkSpeed = 1.2
 let runSpeed = 2
 
@@ -50,46 +49,17 @@ let battle = {
 let fps, fpsInterval, startTime, now, then, elapsed
 
 function startGame() {
-    let bgImage = new Sprite({
-        position: {
-            x: roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x),
-            y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
-        },
-        image: imagePaths.bg,
-        offset: { x: 0, y: 0 },
-        frames: {
-            maxX: 1,
-            maxY: 1,
-            currX: 0,
-            currY: 0,
-        }
-    })
-
-    let fgImage = new Sprite({
-        position: {
-            x: roundToTileSize(startPixel.x + (canvas.width / 2) / ctxScale.x),
-            y: roundToTileSize(startPixel.y + (canvas.height / 2) / ctxScale.y)
-        },
-        image: imagePaths.fg,
-        offset: { x: 0, y: 0 },
-        frames: {
-            maxX: 1,
-            maxY: 1,
-            currX: 0,
-            currY: 0,
-        }
-    })
-
     currentMap = new InstanceMap({
         id: 'homeIsland',
-        bgImage: bgImage,
-        fgImage: fgImage,
+        bgImage: createMapLayerSprite(startPixel, imagePaths.bg),
+        fgImage: createMapLayerSprite(startPixel, imagePaths.fg),
         mapSize: { x: 40, y: 30 },
         collisions: colHomeIsland,
         battleZones: zonesHomeIsland
     })
 
     let playerSprite = new Sprite({
+        type: SpriteType.Player,
         position: {
             x: roundToTileSize((canvas.width / 2) / ctxScale.x),
             y: roundToTileSize((canvas.height / 2) / ctxScale.y)
@@ -111,6 +81,7 @@ function startGame() {
     })
 
     let npcSprite = new Sprite({
+        type: SpriteType.NPC,
         position: {
             x: roundToTileSize(((canvas.width / 2) / ctxScale.x) - 16),
             y: roundToTileSize(((canvas.height / 2) / ctxScale.y) - 64)
@@ -136,6 +107,19 @@ function startGame() {
     startAnimating(60)
 }
 
+function createMapLayerSprite(startingPos, img) {
+    return new Sprite({
+        type: SpriteType.Other,
+        position: {
+            x: roundToTileSize(startingPos.x + (canvas.width / 2) / ctxScale.x),
+            y: roundToTileSize(startingPos.y + (canvas.height / 2) / ctxScale.y)
+        },
+        image: img,
+        offset: { x: 0, y: 0 },
+        frames: { maxX: 1, maxY: 1, currX: 0, currY: 0 }
+    })
+}
+
 function roundToTileSize(num) {
     return Math.ceil(num / tileSize) * tileSize;
 }
@@ -159,16 +143,15 @@ function animate(newTime) {
         then = now - (elapsed % fpsInterval)
         
         currentMap.bgImage.draw()
-        player.sprite.draw()
-
+        
         for (let i=0; i<currentMap.npcs.length; i++){ 
             currentMap.npcs[i].moveToDestination()
             currentMap.npcs[i].sprite.draw()
         }
+        
+        player.sprite.draw()
 
         currentMap.fgImage.draw()
-
-        player.sprite.drawName()
 
         if (!battle.initiated) {
             currentMap.moveMap()
