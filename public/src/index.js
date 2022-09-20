@@ -28,7 +28,6 @@ for (const [key, value] of Object.entries(imagePaths)) {
 }
 
 let player
-let npc
 let currentMap
 
 let startTile = { x: 13, y: 19 }
@@ -114,7 +113,7 @@ function startGame() {
     let npcSprite = new Sprite({
         position: {
             x: roundToTileSize(((canvas.width / 2) / ctxScale.x) - 16),
-            y: roundToTileSize((canvas.height / 2) / ctxScale.y)
+            y: roundToTileSize(((canvas.height / 2) / ctxScale.y) - 64)
         },
         image: imagePaths.npc,
         offset: { x: 0, y: -4 },
@@ -126,13 +125,13 @@ function startGame() {
         }
     })
 
-    npc = new NPC({
+    let npc = new NPC({
         sprite: npcSprite,
-        currentTile: startTile,
-        moveSpeed: walkSpeed
+        positionChanges: [{ x: 0, y: 128 }, { x: 0, y: -64 }, { x: -64, y: 0 }],
+        moveSpeed: 0.8
     })
 
-    currentMap.npcSprites.push(npcSprite)
+    currentMap.npcs.push(npc)
 
     startAnimating(60)
 }
@@ -161,7 +160,12 @@ function animate(newTime) {
         
         currentMap.bgImage.draw()
         player.sprite.draw()
-        npc.sprite.draw()
+
+        for (let i=0; i<currentMap.npcs.length; i++){ 
+            currentMap.npcs[i].moveToDestination()
+            currentMap.npcs[i].sprite.draw()
+        }
+
         currentMap.fgImage.draw()
 
         player.sprite.drawName()

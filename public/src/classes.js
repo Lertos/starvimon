@@ -103,7 +103,7 @@ class InstanceMap {
     
         //Add any object that should be moved along with the map
         this.movingSprites = [bgImage, fgImage]
-        this.npcSprites = []
+        this.npcs = []
 
         this.mapCollisions = []
 
@@ -159,7 +159,7 @@ class InstanceMap {
 
         //If the distance to travel is less then the movement speed, set them to the destination
         if ((xMovement != 0 && xMovement <= player.moveSpeed) || (yMovement != 0 && yMovement <= player.moveSpeed)) {
-            this.movePositionOfMapLayers(xMovement * x, yMovement * y, this.npcSprites)
+            this.movePositionOfMapLayers(xMovement * x, yMovement * y, this.npcs)
             xMovement = destinationTile.x
             yMovement = destinationTile.y
 
@@ -170,7 +170,7 @@ class InstanceMap {
             yMovement = (player.moveSpeed * y)
             
             this.movePositionOfMapLayers(xMovement, yMovement, this.movingSprites)
-            this.movePositionOfMapLayers(xMovement, yMovement, this.npcSprites)
+            this.movePositionOfMapLayers(xMovement, yMovement, this.npcs)
         }
     }
 
@@ -191,15 +191,25 @@ class InstanceMap {
 
     setPositionOfMapLayers(x, y, list) {
         for (let i = 0; i < list.length; i++) {
-            list[i].position.x = x
-            list[i].position.y = y
+            if (list[i] instanceof NPC) {
+                list[i].sprite.position.x = x
+                list[i].sprite.position.y = y
+            } else {
+                list[i].position.x = x
+                list[i].position.y = y
+            }
         }
     }
 
     movePositionOfMapLayers(x, y, list) {
         for (let i = 0; i < list.length; i++) {
-            list[i].position.x += x
-            list[i].position.y += y
+            if (list[i] instanceof NPC) {
+                list[i].sprite.position.x += x
+                list[i].sprite.position.y += y
+            } else {
+                list[i].position.x += x
+                list[i].position.y += y
+            }
         }
     }
 
@@ -254,10 +264,66 @@ class Player {
 
 class NPC {
 
-    constructor({ sprite, currentTile, moveSpeed }) {
+    constructor({ sprite, positionChanges, moveSpeed }) {
         this.sprite = sprite
-        this.currentTile = currentTile
+        this.positionChanges = positionChanges
         this.moveSpeed = moveSpeed
     }
 
+    moveToDestination() {
+        if (this.positionChanges.length == 0)
+            return
+
+        if (this.positionChanges[0].x == 0 && this.positionChanges[0].y == 0) {
+            this.positionChanges.shift()
+
+            if (this.positionChanges.length == 0)
+                return
+        }
+
+        let positionChange = this.positionChanges[0]
+        let x = Math.sign(positionChange.x)
+        let y = Math.sign(positionChange.y)
+
+        //TODO: Cleanup
+        if (positionChange.x != 0) {
+            if (Math.abs(positionChange.x) <= this.moveSpeed) {
+                this.sprite.position.x += positionChange.x
+
+                if (x > 0)
+                    this.positionChanges[0].x -= Math.abs(positionChange.x)
+                else    
+                    this.positionChanges[0].x += Math.abs(positionChange.x)
+                
+                this.positionChanges.shift()
+            } else {
+                if (x > 0) {
+                    this.sprite.position.x += this.moveSpeed
+                    this.positionChanges[0].x -= this.moveSpeed
+                } else {
+                    this.sprite.position.x -= this.moveSpeed
+                    this.positionChanges[0].x += this.moveSpeed
+                }
+            }
+        } else if (positionChange.y != 0) {
+            if (Math.abs(positionChange.y) <= this.moveSpeed) {
+                this.sprite.position.y += positionChange.y
+
+                if (y > 0)
+                    this.positionChanges[0].y -= Math.abs(positionChange.y)
+                else    
+                    this.positionChanges[0].y += Math.abs(positionChange.y)
+                
+                this.positionChanges.shift()
+            } else {
+                if (y > 0) {
+                    this.sprite.position.y += this.moveSpeed
+                    this.positionChanges[0].y -= this.moveSpeed
+                } else {
+                    this.sprite.position.y -= this.moveSpeed
+                    this.positionChanges[0].y += this.moveSpeed
+                }
+            }
+        }
+    }
 }
