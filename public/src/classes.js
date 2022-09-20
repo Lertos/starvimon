@@ -103,6 +103,7 @@ class InstanceMap {
     
         //Add any object that should be moved along with the map
         this.movingSprites = [bgImage, fgImage]
+        this.npcSprites = []
 
         this.mapCollisions = []
 
@@ -158,16 +159,19 @@ class InstanceMap {
 
         //If the distance to travel is less then the movement speed, set them to the destination
         if ((xMovement != 0 && xMovement <= player.moveSpeed) || (yMovement != 0 && yMovement <= player.moveSpeed)) {
+            this.movePositionOfMapLayers(xMovement * x, yMovement * y, this.npcSprites)
             xMovement = destinationTile.x
             yMovement = destinationTile.y
 
+            this.setPositionOfMapLayers(xMovement, yMovement, this.movingSprites)
             this.onDestinationArrival(x, y)
         } else {
-            xMovement = this.bgImage.position.x + (player.moveSpeed * x)
-            yMovement = this.bgImage.position.y + (player.moveSpeed * y)
+            xMovement = (player.moveSpeed * x)
+            yMovement = (player.moveSpeed * y)
+            
+            this.movePositionOfMapLayers(xMovement, yMovement, this.movingSprites)
+            this.movePositionOfMapLayers(xMovement, yMovement, this.npcSprites)
         }
-
-        this.setPositionOfMapLayers(xMovement, yMovement)
     }
 
     onDestinationArrival(x, y) {
@@ -185,10 +189,17 @@ class InstanceMap {
         }
     }
 
-    setPositionOfMapLayers(x, y) {
-        for (let i = 0; i < this.movingSprites.length; i++) {
-            this.movingSprites[i].position.x = x
-            this.movingSprites[i].position.y = y
+    setPositionOfMapLayers(x, y, list) {
+        for (let i = 0; i < list.length; i++) {
+            list[i].position.x = x
+            list[i].position.y = y
+        }
+    }
+
+    movePositionOfMapLayers(x, y, list) {
+        for (let i = 0; i < list.length; i++) {
+            list[i].position.x += x
+            list[i].position.y += y
         }
     }
 
@@ -232,6 +243,16 @@ class InstanceMap {
 }
 
 class Player {
+
+    constructor({ sprite, currentTile, moveSpeed }) {
+        this.sprite = sprite
+        this.currentTile = currentTile
+        this.moveSpeed = moveSpeed
+    }
+
+}
+
+class NPC {
 
     constructor({ sprite, currentTile, moveSpeed }) {
         this.sprite = sprite

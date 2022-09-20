@@ -8,7 +8,8 @@ let runSpeed = 2
 const imagePaths = {
     bg: './img/maps/images/home_island.png',
     fg: './img/maps/images/home_island_fg.png',
-    player: './img/characters/human1.png'
+    player: './img/characters/human1.png',
+    npc: './img/characters/human2.png'
 }
 
 let loadedCounter = 0
@@ -27,6 +28,7 @@ for (const [key, value] of Object.entries(imagePaths)) {
 }
 
 let player
+let npc
 let currentMap
 
 let startTile = { x: 13, y: 19 }
@@ -109,6 +111,29 @@ function startGame() {
         moveSpeed: walkSpeed
     })
 
+    let npcSprite = new Sprite({
+        position: {
+            x: roundToTileSize(((canvas.width / 2) / ctxScale.x) - 16),
+            y: roundToTileSize((canvas.height / 2) / ctxScale.y)
+        },
+        image: imagePaths.npc,
+        offset: { x: 0, y: -4 },
+        frames: {
+            maxX: 3,
+            maxY: 4,
+            currX: 1,
+            currY: 0,
+        }
+    })
+
+    npc = new NPC({
+        sprite: npcSprite,
+        currentTile: startTile,
+        moveSpeed: walkSpeed
+    })
+
+    currentMap.npcSprites.push(npcSprite)
+
     startAnimating(60)
 }
 
@@ -136,6 +161,7 @@ function animate(newTime) {
         
         currentMap.bgImage.draw()
         player.sprite.draw()
+        npc.sprite.draw()
         currentMap.fgImage.draw()
 
         player.sprite.drawName()
